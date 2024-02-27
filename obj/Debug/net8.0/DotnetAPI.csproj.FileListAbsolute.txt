@@ -31,3 +31,4 @@
 /Users/kazbooapp/Desktop/dotnet-course-code/DotnetAPI/obj/Debug/net8.0/DotnetAPI.pdb
 /Users/kazbooapp/Desktop/dotnet-course-code/DotnetAPI/obj/Debug/net8.0/DotnetAPI.genruntimeconfig.cache
 /Users/kazbooapp/Desktop/dotnet-course-code/DotnetAPI/obj/Debug/net8.0/ref/DotnetAPI.dll
+/Users/kazbooapp/Desktop/dotnet-course-code/DotnetAPI/obj/Debug/net8.0/DotnetAPI.sourcelink.json
