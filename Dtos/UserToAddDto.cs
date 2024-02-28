@@ -1,8 +1,7 @@
 namespace DotnetAPI
 {
-    public partial class Users
+    public partial class UserToAddDto
     {
-        public int UserId { get; set; }
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
         public string Email { get; set; } = "";
