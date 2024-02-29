@@ -2,7 +2,7 @@ using System.Data;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
-namespace HelloWorld.Data
+namespace DotnetAPI.Data
 {
 
     public class DataContextDapper
@@ -35,6 +35,11 @@ namespace HelloWorld.Data
         {
             IDbConnection dbConnection = new SqlConnection(_connectionString);
             return dbConnection.Execute(sql);
+        }
+
+        internal int SaveChanges()
+        {
+            throw new NotImplementedException();
         }
     }
 }

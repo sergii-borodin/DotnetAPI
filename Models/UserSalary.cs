@@ -1,6 +1,6 @@
-namespace DotnetAPI
+namespace DotnetAPI.Models
 {
-    public partial class UsersSalary
+    public partial class UserSalary
     {
         public int UserId { get; set; }
         public decimal Salary { get; set; }
