@@ -1,223 +1,223 @@
-using AutoMapper;
-using DotnetAPI.Data;
-using DotnetAPI.Dtos;
-using DotnetAPI.Models;
-using Microsoft.AspNetCore.Mvc;
+// using AutoMapper;
+// using DotnetAPI.Data;
+// using DotnetAPI.Dtos;
+// using DotnetAPI.Models;
+// using Microsoft.AspNetCore.Mvc;
 
-namespace dotnetAPI.Controllers;
+// namespace dotnetAPI.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class UserEFController : ControllerBase
-{
-    IUserRepository _userRepository;
-    IMapper _mapper;
+// [ApiController]
+// [Route("[controller]")]
+// public class UserEFController : ControllerBase
+// {
+//     IUserRepository _userRepository;
+//     IMapper _mapper;
 
-    public UserEFController(IConfiguration config, IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
+//     public UserEFController(IConfiguration config, IUserRepository userRepository)
+//     {
+//         _userRepository = userRepository;
 
-        _mapper = new Mapper(new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<UserToAddDto, User>();
-            cfg.CreateMap<UserSalary, UserSalary>().ReverseMap();
-            cfg.CreateMap<UserJobInfo, UserJobInfo>().ReverseMap();
-        }));
-    }
+//         _mapper = new Mapper(new MapperConfiguration(cfg =>
+//         {
+//             cfg.CreateMap<UserToAddDto, User>();
+//             cfg.CreateMap<UserSalary, UserSalary>().ReverseMap();
+//             cfg.CreateMap<UserJobInfo, UserJobInfo>().ReverseMap();
+//         }));
+//     }
 
-    // Get all users
+//     // Get all users
 
-    [HttpGet("GetUsers")]
-    // public IActionResult Test()
-    public IEnumerable<User> GetUsers()
-    {
-        IEnumerable<User> users = _userRepository.GetUsers();
-        return users;
-    }
-
-
-    // Get a user by userId
-
-    [HttpGet("GetUser/{userId}")]
-    // public IActionResult Test()
-    public User GetSingleUser(int userId)
-    {
-        return _userRepository.GetSingleUser(userId);
-    }
+//     [HttpGet("GetUsers")]
+//     // public IActionResult Test()
+//     public IEnumerable<User> GetUsers()
+//     {
+//         IEnumerable<User> users = _userRepository.GetUsers();
+//         return users;
+//     }
 
 
-    // Edit a user info
+//     // Get a user by userId
 
-    [HttpPut("EditUser")]
-    public IActionResult EditUser(User user)
-    {
-        User? userDb = _userRepository.GetSingleUser(user.UserId);
-
-        if (userDb != null)
-        {
-            userDb.FirstName = user.FirstName;
-            userDb.LastName = user.LastName;
-            userDb.Email = user.Email;
-            userDb.Gender = user.Gender;
-            userDb.Active = user.Active;
-            if (_userRepository.SaveChanges())
-            {
-                return Ok();
-            }
-            throw new Exception("Failed to edit user info");
-        }
-        throw new Exception("Failed to edit user info");
-    }
+//     [HttpGet("GetUser/{userId}")]
+//     // public IActionResult Test()
+//     public User GetSingleUser(int userId)
+//     {
+//         return _userRepository.GetSingleUser(userId);
+//     }
 
 
-    // Delete a new user
+//     // Edit a user info
 
-    [HttpPost("AddUser")]
-    public IActionResult AddUser(UserToAddDto user)
-    {
-        User userDb = _mapper.Map<User>(user);
+//     [HttpPut("EditUser")]
+//     public IActionResult EditUser(User user)
+//     {
+//         User? userDb = _userRepository.GetSingleUser(user.UserId);
 
-        _userRepository.AddEntity<User>(userDb);
-        if (_userRepository.SaveChanges())
-        {
-            return Ok();
-        }
-        throw new Exception("Failed to add user");
-    }
-
-    // Delete a user by userId
-
-    [HttpDelete("DeleteUser/{userId}")]
-    // public IActionResult Test()
-    public IActionResult DeleteUser(int userId)
-    {
-        User? userDb = _userRepository.GetSingleUser(userId);
-
-        if (userDb != null)
-        {
-            _userRepository.RemoveEntity<User>(userDb);
-            if (_userRepository.SaveChanges())
-            {
-                return Ok();
-            }
-            throw new Exception("Failed to delete a user");
-        }
-        throw new Exception("Failed to delete a user");
-    }
-
-    // *********************************************************************  User Salary  *********************************************************************
-
-    // Get a user by user id
-
-    [HttpGet("GetUserSalary/{userId}")]
-    public UserSalary GetUserSalaryByUserId(int userId)
-    {
-        return _userRepository.GetSingleUserSalary(userId);
-    }
-
-    // Add a user salary 
-
-    [HttpPost("PostUserSalary")]
-
-    public IActionResult AddUserSalary(UserSalary userSalary)
-    {
-        UserSalary userSalaryDb = _mapper.Map<UserSalary>(userSalary);
-
-        _userRepository.AddEntity<UserSalary>(userSalaryDb);
-        if (_userRepository.SaveChanges())
-        {
-            return Ok();
-        }
-        throw new Exception("Failed to save a user salary");
-    }
-
-    [HttpPut("UpdateUserSalary")]
-    public IActionResult PutUserSalary(UserSalary userForUpdate)
-    {
-        UserSalary? userToUpdate = _userRepository.GetSingleUserSalary(userForUpdate.UserId);
-
-        if (userToUpdate != null)
-        {
-            _mapper.Map(userForUpdate, userToUpdate);
-            if (_userRepository.SaveChanges())
-            {
-                return Ok();
-            }
-            throw new Exception("Updating UserSalary failed on save");
-        }
-        throw new Exception("Failed to find UserSalary to Update");
-    }
-
-    [HttpDelete("UserSalary/{userId}")]
-    public IActionResult DeleteUserSalaryEf(int userId)
-    {
-        UserSalary? userToDelete = _userRepository.GetSingleUserSalary(userId);
-
-        if (userToDelete != null)
-        {
-            _userRepository.RemoveEntity<UserSalary>(userToDelete);
-            if (_userRepository.SaveChanges())
-            {
-                return Ok();
-            }
-            throw new Exception("Deleting UserSalary failed on save");
-        }
-        throw new Exception("Failed to find UserSalary to delete");
-    }
+//         if (userDb != null)
+//         {
+//             userDb.FirstName = user.FirstName;
+//             userDb.LastName = user.LastName;
+//             userDb.Email = user.Email;
+//             userDb.Gender = user.Gender;
+//             userDb.Active = user.Active;
+//             if (_userRepository.SaveChanges())
+//             {
+//                 return Ok();
+//             }
+//             throw new Exception("Failed to edit user info");
+//         }
+//         throw new Exception("Failed to edit user info");
+//     }
 
 
-    [HttpGet("UserJobInfo/{userId}")]
-    public UserJobInfo GetUserJobInfoEF(int userId)
-    {
-        return _userRepository.GetSingleUserJobInfo(userId);
-    }
+//     // Delete a new user
 
-    [HttpPost("UserJobInfo")]
-    public IActionResult PostUserJobInfoEf(UserJobInfo userForInsert)
-    {
-        _userRepository.AddEntity<UserJobInfo>(userForInsert);
-        if (_userRepository.SaveChanges())
-        {
-            return Ok();
-        }
-        throw new Exception("Adding UserJobInfo failed on save");
-    }
+//     [HttpPost("AddUser")]
+//     public IActionResult AddUser(UserToAddDto user)
+//     {
+//         User userDb = _mapper.Map<User>(user);
+
+//         _userRepository.AddEntity<User>(userDb);
+//         if (_userRepository.SaveChanges())
+//         {
+//             return Ok();
+//         }
+//         throw new Exception("Failed to add user");
+//     }
+
+//     // Delete a user by userId
+
+//     [HttpDelete("DeleteUser/{userId}")]
+//     // public IActionResult Test()
+//     public IActionResult DeleteUser(int userId)
+//     {
+//         User? userDb = _userRepository.GetSingleUser(userId);
+
+//         if (userDb != null)
+//         {
+//             _userRepository.RemoveEntity<User>(userDb);
+//             if (_userRepository.SaveChanges())
+//             {
+//                 return Ok();
+//             }
+//             throw new Exception("Failed to delete a user");
+//         }
+//         throw new Exception("Failed to delete a user");
+//     }
+
+//     // *********************************************************************  User Salary  *********************************************************************
+
+//     // Get a user by user id
+
+//     [HttpGet("GetUserSalary/{userId}")]
+//     public UserSalary GetUserSalaryByUserId(int userId)
+//     {
+//         return _userRepository.GetSingleUserSalary(userId);
+//     }
+
+//     // Add a user salary 
+
+//     [HttpPost("PostUserSalary")]
+
+//     public IActionResult AddUserSalary(UserSalary userSalary)
+//     {
+//         UserSalary userSalaryDb = _mapper.Map<UserSalary>(userSalary);
+
+//         _userRepository.AddEntity<UserSalary>(userSalaryDb);
+//         if (_userRepository.SaveChanges())
+//         {
+//             return Ok();
+//         }
+//         throw new Exception("Failed to save a user salary");
+//     }
+
+//     [HttpPut("UpdateUserSalary")]
+//     public IActionResult PutUserSalary(UserSalary userForUpdate)
+//     {
+//         UserSalary? userToUpdate = _userRepository.GetSingleUserSalary(userForUpdate.UserId);
+
+//         if (userToUpdate != null)
+//         {
+//             _mapper.Map(userForUpdate, userToUpdate);
+//             if (_userRepository.SaveChanges())
+//             {
+//                 return Ok();
+//             }
+//             throw new Exception("Updating UserSalary failed on save");
+//         }
+//         throw new Exception("Failed to find UserSalary to Update");
+//     }
+
+//     [HttpDelete("UserSalary/{userId}")]
+//     public IActionResult DeleteUserSalaryEf(int userId)
+//     {
+//         UserSalary? userToDelete = _userRepository.GetSingleUserSalary(userId);
+
+//         if (userToDelete != null)
+//         {
+//             _userRepository.RemoveEntity<UserSalary>(userToDelete);
+//             if (_userRepository.SaveChanges())
+//             {
+//                 return Ok();
+//             }
+//             throw new Exception("Deleting UserSalary failed on save");
+//         }
+//         throw new Exception("Failed to find UserSalary to delete");
+//     }
 
 
-    [HttpPut("UserJobInfo")]
-    public IActionResult PutUserJobInfoEf(UserJobInfo userForUpdate)
-    {
-        UserJobInfo? userToUpdate = _userRepository.GetSingleUserJobInfo(userForUpdate.UserId);
+//     [HttpGet("UserJobInfo/{userId}")]
+//     public UserJobInfo GetUserJobInfoEF(int userId)
+//     {
+//         return _userRepository.GetSingleUserJobInfo(userId);
+//     }
 
-        if (userToUpdate != null)
-        {
-            _mapper.Map(userForUpdate, userToUpdate);
-            if (_userRepository.SaveChanges())
-            {
-                return Ok();
-            }
-            throw new Exception("Updating UserJobInfo failed on save");
-        }
-        throw new Exception("Failed to find UserJobInfo to Update");
-    }
-
-
-    [HttpDelete("UserJobInfo/{userId}")]
-    public IActionResult DeleteUserJobInfoEf(int userId)
-    {
-        UserJobInfo? userToDelete = _userRepository.GetSingleUserJobInfo(userId);
-
-        if (userToDelete != null)
-        {
-            _userRepository.RemoveEntity<UserJobInfo>(userToDelete);
-            if (_userRepository.SaveChanges())
-            {
-                return Ok();
-            }
-            throw new Exception("Deleting UserJobInfo failed on save");
-        }
-        throw new Exception("Failed to find UserJobInfo to delete");
-    }
+//     [HttpPost("UserJobInfo")]
+//     public IActionResult PostUserJobInfoEf(UserJobInfo userForInsert)
+//     {
+//         _userRepository.AddEntity<UserJobInfo>(userForInsert);
+//         if (_userRepository.SaveChanges())
+//         {
+//             return Ok();
+//         }
+//         throw new Exception("Adding UserJobInfo failed on save");
+//     }
 
 
-}
+//     [HttpPut("UserJobInfo")]
+//     public IActionResult PutUserJobInfoEf(UserJobInfo userForUpdate)
+//     {
+//         UserJobInfo? userToUpdate = _userRepository.GetSingleUserJobInfo(userForUpdate.UserId);
+
+//         if (userToUpdate != null)
+//         {
+//             _mapper.Map(userForUpdate, userToUpdate);
+//             if (_userRepository.SaveChanges())
+//             {
+//                 return Ok();
+//             }
+//             throw new Exception("Updating UserJobInfo failed on save");
+//         }
+//         throw new Exception("Failed to find UserJobInfo to Update");
+//     }
+
+
+//     [HttpDelete("UserJobInfo/{userId}")]
+//     public IActionResult DeleteUserJobInfoEf(int userId)
+//     {
+//         UserJobInfo? userToDelete = _userRepository.GetSingleUserJobInfo(userId);
+
+//         if (userToDelete != null)
+//         {
+//             _userRepository.RemoveEntity<UserJobInfo>(userToDelete);
+//             if (_userRepository.SaveChanges())
+//             {
+//                 return Ok();
+//             }
+//             throw new Exception("Deleting UserJobInfo failed on save");
+//         }
+//         throw new Exception("Failed to find UserJobInfo to delete");
+//     }
+
+
+// }
